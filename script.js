@@ -26,7 +26,7 @@ chrome.storage.local.get('featureEnabled', function(data) {
     } else {
       
         console.log("disabled")
-       // powerButton.classList.toggle('power-on');
+       
     }
 });
 

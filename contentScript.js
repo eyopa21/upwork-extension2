@@ -1,69 +1,169 @@
-// Create a link element for Bootstrap CSS file
-var bootstrapLink = document.createElement("link");
-bootstrapLink.rel = "stylesheet";
-bootstrapLink.href =
-  "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"; // Bootstrap 5 CDN URL
 
-// Append the link element to the head of the document
-document.head.appendChild(bootstrapLink);
-// Create a container for the toast
+
+var styleElement = document.createElement('style');
+
+
+var keyframes = `
+    @keyframes slideInRight {
+        0% {
+            transform: translateX(110%);
+        }
+        75% {
+            transform: translateX(-10%);
+        }
+        100% {
+            transform: translateX(0%);
+        }
+    }
+
+    @keyframes slideOutRight {
+        0% {
+            transform: translateX(0%);
+        }
+        25% {
+            transform: translateX(-10%);
+        }
+        100% {
+            transform: translateX(110%);
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes toastProgress {
+        0% {
+            width: 100%;
+        }
+        100% {
+            width: 0%;
+        }
+    }
+`;
+
+
+styleElement.innerHTML = keyframes;
+
+
+document.head.appendChild(styleElement);
+
+
+var GFont = document.createElement("link");
+GFont.rel = "stylesheet";
+GFont.href =
+  "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"; 
+document.head.appendChild(GFont);
+
+
+
+
 var toastContainer = document.createElement("div");
 
-toastContainer.style.zIndex = "100"; // Set the z-index
+toastContainer.style.zIndex = "100"; 
 
-// Create the toast element
+
 var toast = document.createElement("div");
-toast.id = "liveToast";
-toast.classList.add("toast", "hide");
-toast.setAttribute("role", "alert");
-toast.setAttribute("aria-live", "assertive");
-toast.setAttribute("aria-atomic", "true");
+toastContainer.id = "toast-overlay";
+toastContainer.classList.add("toast-overlay");
 
-// Create the toast header
-var toastHeader = document.createElement("div");
-toastHeader.classList.add("toast-header");
 
-var toastImg = document.createElement("img");
-toastImg.src = "./icon.png"; // Add image source
-toastImg.classList.add("rounded", "me-2");
-toastImg.alt = "icon";
 
-var toastStrong = document.createElement("strong");
-toastStrong.classList.add("me-auto");
-toastStrong.textContent = "Notfication from mailsniplet";
-
-var toastSmall = document.createElement("small");
-toastSmall.textContent = "mailsniplet.com";
-
-var toastCloseBtn = document.createElement("button");
-toastCloseBtn.type = "button";
-toastCloseBtn.classList.add("btn-close");
-toastCloseBtn.setAttribute("data-bs-dismiss", "toast");
-toastCloseBtn.setAttribute("aria-label", "Close");
-
-// Create the toast body
-var toastBody = document.createElement("div");
-toastBody.classList.add("toast-body");
-toastBody.textContent = "";
-toastBody.style.color = "white";
-// Construct the toast header
-toastHeader.appendChild(toastImg);
-toastHeader.appendChild(toastStrong);
-toastHeader.appendChild(toastSmall);
-toastHeader.appendChild(toastCloseBtn);
-
-// Append the toast header and body to the toast element
-toast.appendChild(toastHeader);
-toast.appendChild(toastBody);
-
-toastContainer.appendChild(toast);
 document.body.appendChild(toastContainer);
 
 
 
 
 
+  
+let icon = { 
 
+    success: 
+
+    '<span class="material-symbols-outlined">task_alt</span>', 
+
+    danger: 
+
+    '<span class="material-symbols-outlined">error</span>', 
+
+    warning: 
+
+    '<span class="material-symbols-outlined">warning</span>', 
+
+    info: 
+
+    '<span class="material-symbols-outlined">info</span>', 
+}; 
+
+  
+const showToast = ( 
+
+    message = "Sample Message", 
+
+    toastType = "info", 
+
+    duration = 5000) => { 
+
+    if ( 
+
+        !Object.keys(icon).includes(toastType)) 
+
+        toastType = "info"; 
+
+  
+
+    let box = document.createElement("div"); 
+
+  //box.classList.add( "toast", `toast-${toastType}`);
+  
+  box.style.cssText = ' position: fixed; top: 25px; right: 25 max-width: 300px; background: #fff; padding: 0.5rem; border-radius: 4px; box-shadow: -1px 1px 10px rgba(0, 0, 0, 0.3); z-index: 1023; animation: slideInRight 0.3s ease-in-out forwards, fadeOut 0.5s ease-in-out forwards 3s; transform: translateX(110%);'
+
+    box.innerHTML = ` <div class="toast-content-wrapper" style="background-color: #95eab8; display: flex; justify-content: space-between; align-items: center;"> 
+
+                      <div class="toast-icon" style=" padding: 0.35rem 0.5rem; font-size: 1.5rem;"> 
+
+                      ${icon[toastType]} 
+
+                      </div> 
+
+                      <div class="toast-message" style="flex: 1; font-size: 0.9rem; color: #000000; padding: 0.5rem;">${message}</div> 
+
+                      <div class="toast-progress" style="position: absolute; display: block; bottom: 0; left: 0; height: 4px; width: 100%; background: #b7b7b7; animation: toastProgress 3s ease-in-out forwards;"></div> 
+
+                      </div>`; 
+
+    duration = duration || 5000; 
+
+    box.querySelector(".toast-progress").style.animationDuration = 
+
+            `${duration / 1000}s`; 
+
+  
+
+    let toastAlready =  
+
+        document.body.querySelector(".toast"); 
+
+    if (toastAlready) { 
+
+        toastAlready.remove(); 
+
+    } 
+
+  
+
+  document.body.appendChild(box)
+
+}; 
+  
+
+
+ 
 
 
 function hide() {
@@ -97,22 +197,9 @@ chrome.storage.local.get("featureEnabled", function (data) {
       function (response) {
         console.log("Current domain:", response.domain);
         if (list.includes(response.domain)) {
-          
-          console.log("yay found");
-          toastBody.style.backgroundColor = "green"
-          
-          toastBody.textContent = `You have visited this domain: ${response.domain} before`;
-          toast.classList.replace("hide", "show");
-
-          setTimeout(hide, 8000);
+         
         } else {
-          console.log("sad not found");
-           toastBody.style.backgroundColor = "red"
-
-          toastBody.textContent = `You have not visited this domain: ${response.domain} before`;
-          toast.classList.replace("hide", "show");
-
-          setTimeout(hide, 8000);
+         showToast("Article Submitted Successfully","success",5000); 
         }
       }
     );
