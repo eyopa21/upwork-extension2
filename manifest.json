@@ -1,7 +1,7 @@
 {
-  "name": "test1",
-  "version": "0.1",
-  "description": "test1",
+  "name": "Domain checker",
+  "version": "0.3",
+  "description": "Mailsniplet domain checker",
   "background": {
     "service_worker": "background.js"
   },
