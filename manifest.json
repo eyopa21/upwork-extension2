@@ -1,7 +1,7 @@
 {
-  "name": "Domain checker",
-  "version": "0.3",
-  "description": "Mailsniplet domain checker",
+  "name": "Prospect registry domain checker",
+  "version": "0.0.4",
+  "description": "A domain checker extension for Prospect registry",
   "background": {
     "service_worker": "background.js"
   },

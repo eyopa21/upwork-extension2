@@ -220,14 +220,8 @@ const showToast = (
   document.body.appendChild(box);
 };
 
-var myDiv = document.querySelector("div");
-const list = [
-  "www.benhams.com",
-  "www.grange.london",
-  "www.realestates-wsp.co.uk",
-  "www.hudsonsproperty.com",
-  "www.danielcobb.co.uk",
-];
+
+
 
 function fetchData(url) {
   return new Promise((resolve, reject) => {
@@ -246,6 +240,8 @@ function fetchData(url) {
       });
   });
 }
+
+
 
 chrome.storage.local.get("featureEnabled", function (data) {
   var featureEnabled = data.featureEnabled || false;
