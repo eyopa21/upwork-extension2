@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 var styleElement = document.createElement("style");
 
 var style = `
@@ -45,7 +39,7 @@ var style = `
 
     background: #b7b7b7;
 
-    animation: toastProgress 3s ease-in-out forwards;
+    
 }
 
 .toast.toast-success {
@@ -67,17 +61,23 @@ var style = `
 .p-1{
   padding: 1rem;
 }
+.place-toast-center{
+  top: 3px;
+   right: 35%;
+}
+.place-toast-right{
+  top: 25px;
+   right:25px;
+    animation: slideInRight 0.3s ease-in-out forwards, fadeOut 0.5s ease-in-out forwards 3s;
+     transform: translateX(110%);
+}
 .toast {
     height: auto;
 
     font-size: 16px;
 
     position: fixed;
-
-    top: 25px;
-
-    right: 25px;
-
+    
     max-width: 300px;
 
     background: #fff;
@@ -90,11 +90,9 @@ var style = `
 
     z-index: 2147483647;
 
-    animation: slideInRight 0.3s ease-in-out forwards,
+   
 
-        fadeOut 0.5s ease-in-out forwards 3s;
-
-    transform: translateX(110%);
+   
 }
 
     @keyframes slideInRight {
@@ -179,42 +177,23 @@ document.body.appendChild(loader);
 
 let icon = {
   success: '<span class="material-symbols-outlined">✔</span>',
-
   danger: '<span class="material-symbols-outlined">⚠︎</span>',
 };
 
 const showToast = (
- 
-
   toastType = "info",
-
-  duration = 5000
 ) => {
   if (!Object.keys(icon).includes(toastType)) toastType = "info";
 
   let box = document.createElement("div");
 
-  box.classList.add("toast", `toast-${toastType}`);
+  box.classList.add("toast", `toast-${toastType}`, "place-toast-center");
 
-  box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647;width: 500px; min-width: 300px; display: flex; justify-content: space-between; align-items: center;"> 
-
-                      
+  box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647;width: 500px; min-width: 300px; display: flex; justify-content: space-between; align-items: center;">  
 
                       <div class="toast-progress" ></div> 
 
                       </div>`;
-
-  duration = duration || 5000;
-
-  box.querySelector(".toast-progress").style.animationDuration = `${
-    duration / 1000
-  }s`;
-
-  let toastAlready = document.body.querySelector(".toast");
-
-  if (toastAlready) {
-    toastAlready.remove();
-  }
 
   document.body.appendChild(box);
 };
@@ -233,7 +212,7 @@ const showAddingToast = (
 
 
 
- box.classList.add("toast", `toast-${toastType}`, 'p-1');
+ box.classList.add("toast", `toast-${toastType}`, 'p-1', "place-toast-right");
 
   box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647; display: flex; justify-content: space-between; align-items: center;"> 
 
@@ -245,7 +224,7 @@ const showAddingToast = (
 
                       <div class="toast-message" style="flex: 1; font-size: 16px; color: #000000; padding: 0.5rem;">${message}</div> 
 
-                      <div class="toast-progress" ></div> 
+                      <div class="toast-progress" style="animation: toastProgress 3s ease-in-out forwards;" ></div> 
 
                       </div>`;
 
@@ -291,7 +270,6 @@ chrome.storage.local.get("featureEnabled", function (data) {
 
   if (featureEnabled) {
     console.log("enabled");
-   
     chrome.runtime.sendMessage(
       { action: "getCurrentUrl" },
       async function (response) {
@@ -305,10 +283,10 @@ chrome.storage.local.get("featureEnabled", function (data) {
           });
           if (lists?.includes(response.domain)) {
             loader.classList.replace('block', 'hidden');
-            showToast( "danger", 5000);
+            showToast( "danger");
           } else {
             loader.classList.replace('block', 'hidden');
-            showToast( "success", 5000);
+            showToast( "success");
           }
         } catch (error) {
           console.error("Error:", error);
@@ -322,14 +300,12 @@ chrome.storage.local.get("featureEnabled", function (data) {
 
 
 
-
-
-
-
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
  
-    if (message.action === 'domainAddSuccess') {
+  if (message.action === 'domainAddSuccess') {
+         showToast( "danger");
       showAddingToast("Domain stored in the database", "success", 5000);   
+
      
     } else if(message.action === 'domainAddError') {
       showAddingToast("Error adding domain", "danger", 5000);
