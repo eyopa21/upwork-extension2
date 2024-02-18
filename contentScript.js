@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 var styleElement = document.createElement("style");
 
 var style = `
@@ -23,7 +30,7 @@ var style = `
   animation: spin 1s linear infinite; /* Adjust the duration and timing function as per your needs */
 }
 .toast-progress {
-
+    
     position: absolute;
 
     display: block;
@@ -47,7 +54,7 @@ var style = `
 }
 .toast.toast-success .toast-progress {
 
-    background-color: red;
+    background-color: green;
 }
 .toast.toast-danger {
 
@@ -56,6 +63,9 @@ var style = `
 .toast.toast-danger .toast-progress {
 
     background-color: #e74c3c;
+}
+.p-1{
+  padding: 1rem;
 }
 .toast {
     height: auto;
@@ -72,7 +82,7 @@ var style = `
 
     background: #fff;
 
-    padding: 1rem;
+    
 
     border-radius: 4px;
 
@@ -131,7 +141,6 @@ var style = `
 `;
 
 styleElement.innerHTML = style;
-
 document.head.appendChild(styleElement);
 
 var GFont = document.createElement("link");
@@ -140,9 +149,6 @@ GFont.href =
   "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
 document.head.appendChild(GFont);
 
-var toastContainer = document.createElement("div");
-
-toastContainer.style.zIndex = "100";
 
 let loader = document.createElement("div");
 loader.style.cssText =
@@ -166,11 +172,10 @@ loader.innerHTML = ` <svg
                       fill="#FFFFFF"
                     /></svg>`;
 
-toastContainer.id = "toast-overlay";
-toastContainer.classList.add("toast-overlay");
+
 
 document.body.appendChild(loader);
-document.body.appendChild(toastContainer);
+
 
 let icon = {
   success: '<span class="material-symbols-outlined">✔</span>',
@@ -179,7 +184,7 @@ let icon = {
 };
 
 const showToast = (
-  message = "Sample Message",
+ 
 
   toastType = "info",
 
@@ -191,15 +196,9 @@ const showToast = (
 
   box.classList.add("toast", `toast-${toastType}`);
 
-  box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647; display: flex; justify-content: space-between; align-items: center;"> 
+  box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647;width: 500px; min-width: 300px; display: flex; justify-content: space-between; align-items: center;"> 
 
-                      <div class="toast-icon" style=" padding: 0.35rem 0.5rem; font-size: 1.5rem;"> 
-
-                      ${icon[toastType]} 
-
-                      </div> 
-
-                      <div class="toast-message" style="flex: 1; font-size: 16px; color: #000000; padding: 0.5rem;">${message}</div> 
+                      
 
                       <div class="toast-progress" ></div> 
 
@@ -221,7 +220,51 @@ const showToast = (
 };
 
 
+const showAddingToast = (
+  message = "Sample Message",
 
+  toastType = "info",
+
+  duration = 5000
+) => {
+  if (!Object.keys(icon).includes(toastType)) toastType = "info";
+
+  let box = document.createElement("div");
+
+
+
+ box.classList.add("toast", `toast-${toastType}`, 'p-1');
+
+  box.innerHTML = ` <div class="toast-content-wrapper" style="z-index: 2147483647; display: flex; justify-content: space-between; align-items: center;"> 
+
+                      <div class="toast-icon" style=" padding: 0.35rem 0.5rem; font-size: 1.5rem;"> 
+
+                      ${icon[toastType]} 
+
+                      </div> 
+
+                      <div class="toast-message" style="flex: 1; font-size: 16px; color: #000000; padding: 0.5rem;">${message}</div> 
+
+                      <div class="toast-progress" ></div> 
+
+                      </div>`;
+
+  duration = duration || 5000;
+
+  box.querySelector(".toast-progress").style.animationDuration = `${
+    duration / 1000
+  }s`;
+
+  
+
+  let toastAlready = document.body.querySelector(".toast");
+
+  if (toastAlready) {
+    toastAlready.remove();
+  }
+
+  document.body.appendChild(box);
+};
 
 function fetchData(url) {
   return new Promise((resolve, reject) => {
@@ -248,13 +291,7 @@ chrome.storage.local.get("featureEnabled", function (data) {
 
   if (featureEnabled) {
     console.log("enabled");
-    toastContainer.classList.add(
-      "position-fixed",
-      "top-0",
-      "end-0",
-      "p-3",
-      "bg-primary"
-    );
+   
     chrome.runtime.sendMessage(
       { action: "getCurrentUrl" },
       async function (response) {
@@ -268,10 +305,10 @@ chrome.storage.local.get("featureEnabled", function (data) {
           });
           if (lists?.includes(response.domain)) {
             loader.classList.replace('block', 'hidden');
-            showToast("You have seen this page before", "danger", 5000);
+            showToast( "danger", 5000);
           } else {
             loader.classList.replace('block', 'hidden');
-            showToast("You have not visited this page before", "success", 5000);
+            showToast( "success", 5000);
           }
         } catch (error) {
           console.error("Error:", error);
@@ -282,3 +319,22 @@ chrome.storage.local.get("featureEnabled", function (data) {
     console.log("disabled");
   }
 });
+
+
+
+
+
+
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+ 
+    if (message.action === 'domainAddSuccess') {
+      showAddingToast("Domain stored in the database", "success", 5000);   
+     
+    } else if(message.action === 'domainAddError') {
+      showAddingToast("Error adding domain", "danger", 5000);
+    }
+});
+
+
+

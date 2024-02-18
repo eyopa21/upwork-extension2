@@ -1,7 +1,7 @@
 {
-  "name": "Prospect registry domain checker",
+  "name": "Prospect Registry domain checker",
   "version": "0.0.4",
-  "description": "A domain checker extension for Prospect registry",
+  "description": "A domain checker extension for Prospect Registry",
   "background": {
     "service_worker": "background.js"
   },
