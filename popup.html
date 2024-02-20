@@ -3,129 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Power Button</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+    <title>Prospect registry extension</title>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body class="w-72 !min-w-72 rounded-full">
+  <body
+    class="w-72 !min-w-72 min-h-96 h-full rounded-full bg-no-repeat m-1.5"
+    style="background-image: url('/assets/Background.svg')"
+  >
+    <div class="flex justify-end">
+      <img src="/assets/Corners.svg" class="w-16 h-16" />
+    </div>
     <div>
-      <div
-        class="flex flex-col rounded-3xl justify-center items-center h-[100vh]"
-      >
-        <div
-          class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
-        >
-          <div
-            class="relative flex h-32 w-full justify-center rounded-xl bg-red-500"
+      <div class="mt-2">
+        <div class="flex justify-center">
+          <button
+            type="button"
+            id="powerButton"
+            class="hover:scale-[105%] transition-all duration-300"
           >
-            <div
-              class="absolute mr-8 -bottom-12 -mt-16 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white"
+            <img
+              src="/assets/Power-button-green.svg"
+              alt="power on"
+              class="w-32 h-32"
+            />
+          </button>
+        </div>
+        <div class="flex justify-end mr-12 -mt-4">
+          <button
+            type="button"
+            id="addButton"
+            class="hover:scale-[105%] transition-all duration-300"
+          >
+            <img
+              src="/assets/Add-button.svg"
+              alt="addbutton"
+              class="w-16 h-16"
+            />
+          </button>
+          <div id="loader" class="hidden"></div>
+        </div>
+      </div>
+      <form class="mt-16">
+        <div class="space-y-2">
+          <div class="flex flex-col mx-8 space-y-1">
+            <label for="email" class="text-green-700 font-serif"> Email </label>
+            <input
+              name="email"
+              id="email"
+              type="email"
+              class="h-8 bg-gray-200 rounded-lg text-sm px-1 ring-4 ring-green-700 focus:ring-green-900 focus:outline-none"
+            />
+          </div>
+          <div class="relative flex flex-col mx-8 space-y-1">
+            <label for="password" class="text-green-700 font-serif">
+              Password
+            </label>
+            <input
+              name="password"
+              type="password"
+              id="password"
+              class="h-8 bg-gray-200 rounded-lg text-sm px-1 ring-4 ring-green-700 focus:ring-green-900 focus:outline-none"
+            />
+            <button
+              type="button"
+              onclick="togglePasswordVisibility()"
+              class="absolute top-5 right-0 text-sm"
             >
-              <div class="h-16 w-16 rounded-full">
-                <div class="container">
-                  <button id="powerButton" class="power-off">
-                    <span class="inner-circle">
-                      <svg
-                        fill="#59064b"
-                        version="1.1"
-                        id="Capa_1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        class="w-16 h-16 -mt-1 -ml-0.5 stroke-white"
-                        viewBox="0 0 556.568 556.568"
-                        xml:space="preserve"
-                      >
-                        <g>
-                          <g>
-                            <path
-                              d="M210.37,133.725V43.434c0-2.264,0.116-4.501,0.333-6.708C97.48,66.592,13.985,169.665,13.985,292.27
-			c0,145.969,118.33,264.299,264.298,264.299c145.967,0,264.299-118.33,264.299-264.299c0-122.605-83.496-225.678-196.719-255.543
-			c0.217,2.207,0.334,4.443,0.334,6.708v90.292c61.441,26.42,104.58,87.531,104.58,158.542c0,95.113-77.381,172.498-172.498,172.498
-			c-95.114,0-172.499-77.383-172.499-172.498C105.785,221.256,148.928,160.148,210.37,133.725z"
-                            />
-                            <path
-                              d="M321.718,267.083V125.319V43.434c0-4.226-0.635-8.299-1.76-12.164C314.694,13.21,298.048,0,278.284,0
-			c-19.765,0-36.411,13.21-41.674,31.27c-1.126,3.862-1.759,7.938-1.759,12.164v81.886v141.767
-			c0,23.988,19.443,43.434,43.434,43.434C302.274,310.516,321.718,291.07,321.718,267.083z"
-                            />
-                          </g>
-                        </g></svg
-                    ></span>
-
-                    <span class="outer-circle"></span>
-                  </button>
-                </div>
-              </div>
-            </div>
+              <img src="/assets/Eye-icon.svg" alt="" class="w-8 h-8" />
+            </button>
           </div>
-          <div class="mt-24 flex flex-col items-center">
-            <h4 class="text-xl font-bold text-navy-700 dark:text-white">
-              Mailsniplet
-            </h4>
-            <p class="text-base font-normal text-gray-600">
-              Website domain checker
-            </p>
-          </div>
-
-          <div>
-            <div class="block flex w-64 items-center p-8 uppercase">
-              <button
-                id="addButton"
-                class="flex flex-row items-center justify-center mt-3 text-lg font-semibold bg-pink-400 w-full text-white rounded-lg px-2 py-3 block shadow-xl hover:bg-gray-700"
-              >
-                <div id="spinner" class="w-8 h-8 animate-spin hidden">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      opacity="0.2"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      fill="#FFFFFF"
-                    />
-                    <path
-                      d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z"
-                      fill="#FFFFFF"
-                    />
-                  </svg>
-                </div>
-                <span id="button-text" class="block"
-                  ><svg
-                    class="w-12 h-12 ml-12 flex justify-center items-center"
-                    xmlns="http://www.w3.org/2000/svg"
-                    id="cp"
-                    viewBox="0 0 1950 1950"
-                  >
-                    <path
-                      d="m1083.64,860.74v-402.55c0-30.48-11.88-59.18-33.47-80.81-21.56-21.56-50.26-33.47-80.81-33.47-62.96,0-114.25,51.25-114.25,114.28v402.55h-402.55c-63,0-114.25,51.25-114.25,114.25s51.25,114.25,114.25,114.25h402.55v402.59c0,63,51.29,114.25,114.25,114.25s114.28-51.25,114.28-114.25v-402.59h402.55c30.52,0,59.22-11.88,80.88-33.47,21.56-21.63,33.4-50.29,33.4-80.78,0-63-51.25-114.25-114.28-114.25h-402.55Zm402.55,73.12c22.69,0,41.13,18.47,41.13,41.13,0,10.99-4.26,21.32-11.98,29.08-7.79,7.76-18.16,12.05-29.15,12.05h-475.68v475.71c0,22.66-18.44,41.13-41.16,41.13s-41.13-18.47-41.13-41.13v-475.71h-475.68c-22.69,0-41.13-18.44-41.13-41.13s18.44-41.13,41.13-41.13h475.68v-475.67c0-22.69,18.44-41.16,41.13-41.16,11.02,0,21.35,4.29,29.08,12.02,7.79,7.79,12.08,18.16,12.08,29.15v475.67h475.68Z"
-                      style="fill: #fd3e81"
-                    />
-                    <path
-                      d="m975,1950C437.39,1950,0,1512.61,0,975S437.39,0,975,0s975,437.39,975,975-437.39,975-975,975Zm0-1881.34c-499.76,0-906.34,406.58-906.34,906.34s406.58,906.34,906.34,906.34,906.34-406.58,906.34-906.34S1474.76,68.66,975,68.66Z"
-                      style="fill: #fd3e81"
-                    />
-                  </svg>
-                  Add this domain
-                </span>
-              </button>
-            </div>
-            <div
-              id="message"
-              class="hidden text-black justify-center animate-ping shake"
-            ></div>
+          <div class="flex justify-end mr-12 pt-4">
+            <button class="hover:scale-[105%] transition-all duration-300">
+              <img
+                src="/assets/Login-button.svg"
+                alt="login"
+                class="w-12 h-12"
+              />
+            </button>
           </div>
         </div>
+      </form>
+      <div class="flex flex-row mt-6">
+        <div class="rotate-180">
+          <img src="/assets/Corners.svg" class="w-16 h-16" />
+        </div>
+        <button class="mx-auto text-green-700 pt-4 pr-16 font-serif">
+          V0.0.6
+        </button>
       </div>
     </div>
     <script src="script.js"></script>

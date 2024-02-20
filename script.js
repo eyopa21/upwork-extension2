@@ -2,11 +2,25 @@
 const powerButton = document.getElementById("powerButton");
 const addButton = document.getElementById("addButton");
 
+function togglePowerIcon() {
+  // Toggle the 'power-on' class on the power button
+  if (powerButton.innerHTML.includes('green')) {
+    powerButton.innerHTML = `<img src='/assets/Power-button-red.svg' alt='power off' class='w-32 h-32'/>`
+  } else {
+     powerButton.innerHTML = `<img src='/assets/Power-button-green.svg' alt='power off' class='w-32 h-32'/>`
+ }
+}
+
 // Event listener for the power button
+let icon = 'Power-button-green.svg'
 powerButton.addEventListener("click", function () {
   // Toggle the 'power-on' class on the power button
-  this.classList.toggle("power-on");
-
+  togglePowerIcon();
+  
+  // do the main check and toggle the left bar
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: "toggleLeftBar" });
+    });
   // Check if the chrome.storage.local API is available
   if (chrome.storage?.local) {
     // Retrieve the 'featureEnabled' data from local storage
@@ -14,9 +28,12 @@ powerButton.addEventListener("click", function () {
       // Get the current state of the feature or default to false
       var featureEnabled = data.featureEnabled || false;
       // Update the feature status in local storage
-        chrome.storage.local.set({ featureEnabled: !featureEnabled });
+      chrome.storage.local.set({ featureEnabled: !featureEnabled });
+      //refresh the page
+     
     });
-    //alert('refresh the page')
+    
+    
   }
 });
 
@@ -67,7 +84,7 @@ const RegisterDomain = (domain) => {
 };
 
 // Get the current URL using chrome.runtime API
-chrome.runtime.sendMessage({ action: "getCurrentUrl" }, function (response) {
+chrome.runtime?.sendMessage({ action: "getCurrentUrl" }, function (response) {
   if (chrome.runtime.lastError) {
     // Handle errors
     console.error("Error:", chrome.runtime.lastError.message);
@@ -86,9 +103,25 @@ chrome.storage?.local.get("featureEnabled", function (data) {
   var featureEnabled = data.featureEnabled || false;
   if (featureEnabled) {
     console.log("enabled");
-    // Toggle the 'power-on' class on the power button if feature is enabled
-    powerButton.classList.toggle("power-on");
+    powerButton.innerHTML = "<img src='/assets/Power-button-red.svg' alt='power off' class='w-32 h-32'/>"
+
   } else {
     console.log("disabled");
+     powerButton.innerHTML = "<img src='/assets/Power-button-green.svg' alt='power off' class='w-32 h-32'/>"
+
   }
 });
+
+
+
+// A function to toggle the visiblity of the password input field
+function togglePasswordVisibility() {
+  var passwordField = document.getElementById("password");
+   
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+    } else {
+      passwordField.type = "password";
+ 
+    }
+  }
