@@ -61,8 +61,8 @@ const RegisterDomain = (domain) => {
   // Make a POST request to add the domain
   fetch(url, options)
     .then((data) => {
-      console.log("Success:", data);
-      // Hide spinner and show button text
+      
+      //Success,  Hide spinner and show button text
       document.getElementById("spinner").classList.replace("block", "hidden");
       document.getElementById("button-text").classList.replace("hidden", "block");
       // Send message to content script to indicate domain addition success
@@ -72,8 +72,7 @@ const RegisterDomain = (domain) => {
       });
     })
     .catch((error) => {
-      console.error("Error:", error);
-      // Hide spinner and show button text
+      // Error, Hide spinner and show button text
       document.getElementById("spinner").classList.replace("block", "hidden");
       document.getElementById("button-text").classList.replace("hidden", "block");
       // Send message to content script to indicate domain addition failure

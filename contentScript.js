@@ -51,14 +51,14 @@ var style = `
 }
 
 .place-toast-left {
-  top: 5px;
-  left: 10px;
+  top: 5px !important;
+  left: 10px !important;
 }
 
 .place-toast-right {
-  top: 25px;
-  right: 25px;
-  padding: 1rem;
+  top: 25px !important;
+  right: 25px !important;
+  padding: 1rem !important;
   animation: slideInRight 0.3s ease-in-out forwards, fadeOut 0.5s ease-in-out forwards 3s;
   transform: translateX(110%);
 }
@@ -124,15 +124,14 @@ document.head.appendChild(styleElement);
 // Create a link element to import Google Fonts
 var GFont = document.createElement("link");
 GFont.rel = "stylesheet";
-GFont.href =
-  "https://fonts.googleapis.com/icon?family=Material+Icons";
+GFont.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
 document.head.appendChild(GFont);
 
 // Create a loader element to indicate loading state
 let loader = document.createElement("div");
 loader.style.cssText =
-  "z-index:2147483647; position: fixed;background-color: #4299e1;width: 2.5rem; height: 2.5rem; right: 0; top: 0;";
-loader.classList.add('hidden');
+  "z-index:2147483647 !important; position: fixed !important;background-color: #4299e1 !important;width: 2.5rem !important; height: 2.5rem !important; right: 0 !important; top: 0 !important;";
+loader.classList.add("hidden");
 loader.innerHTML = `<svg
                     class="spinning"
                     viewBox="0 0 24 24"
@@ -174,10 +173,12 @@ showLeftBar = (toastType = "info") => {
   document.body.appendChild(box);
 };
 
-
-
 // Function to show an adding toast notification
-showAddingToast = (message = "Sample Message", toastType = "info", duration = 5000) => {
+showAddingToast = (
+  message = "Sample Message",
+  toastType = "info",
+  duration = 5000
+) => {
   // Ensure toast type is valid
   if (!Object.keys(icon).includes(toastType)) toastType = "info";
 
@@ -189,12 +190,14 @@ showAddingToast = (message = "Sample Message", toastType = "info", duration = 50
                         ${icon[toastType]} 
                       </div> 
                       <div class="toast-message" style="flex: 1; font-size: 16px; color: #000000; padding: 0.5rem;">${message}</div> 
-                      <div class="toast-progress" style="animation: toastProgress 3s ease-in-out forwards;" ></div> 
+                      <div class="toast-progress" style="animation: toastProgress 3s ease-in-out forwards; background-color: #10B981 !important;" ></div> 
                     </div>`;
 
   // Set duration for the toast
   duration = duration || 5000;
-  box.querySelector(".toast-progress").style.animationDuration = `${duration / 1000}s`;
+  box.querySelector(".toast-progress").style.animationDuration = `${
+    duration / 1000
+  }s`;
 
   // Remove any existing toast
   let toastAlready = document.body.querySelector(".toast");
@@ -226,39 +229,44 @@ function fetchData(url) {
 
 // Check if feature is enabled
 function toggleLeftBar() {
-chrome.storage.local.get("featureEnabled", function (data) {
-  var featureEnabled = data.featureEnabled || false;
-  if (featureEnabled) {
-    console.log("enabled");
-    chrome.runtime.sendMessage({ action: "getCurrentUrl" }, async function (response) {
-      try {
-        loader.classList.replace('hidden', 'block');
-        const data = await fetchData("https://prospectregistry.com/api/v1/domain/get");
-        let lists = data?.domains.map((list) => {
-          return list.domain_url;
-        });
-        if (lists?.includes(response.domain)) {
-          loader.classList.replace('block', 'hidden');
-          showLeftBar("danger");
-        } else {
-          loader.classList.replace('block', 'hidden');
-          showLeftBar("success");
+  chrome.storage.local.get("featureEnabled", function (data) {
+    var featureEnabled = data.featureEnabled || false;
+    if (featureEnabled) {
+      console.log("enabled");
+      // the feature is enabled
+      chrome.runtime.sendMessage(
+        { action: "getCurrentUrl" },
+        async function (response) {
+          try {
+            loader.classList.replace("hidden", "block");
+            const data = await fetchData(
+              "https://prospectregistry.com/api/v1/domain/get"
+            );
+            let lists = data?.domains.map((list) => {
+              return list.domain_url;
+            });
+            if (lists?.includes(response.domain)) {
+              loader.classList.replace("block", "hidden");
+              showLeftBar("danger");
+            } else {
+              loader.classList.replace("block", "hidden");
+              showLeftBar("success");
+            }
+          } catch (error) {
+            
+            loader.style.backgroundColor = "red";
+            loader.classList.replace("hidden", "block");
+            setTimeout(() => {
+              loader.classList.replace("block", "hidden");
+            }, 3000);
+          }
         }
-      } catch (error) {
-        console.error("Error:", error);
-        loader.style.backgroundColor = 'red';
-        loader.classList.replace('hidden', 'block');
-        setTimeout(() => {
-          loader.classList.replace('block', 'hidden');
-        }, 3000)
-      }
-    });
-  } else {
-    console.log("disabled");
-    removeLeftBar();
-
-  }
-});
+      );
+    } else {
+     // the feature is disabled
+      removeLeftBar();
+    }
+  });
 }
 toggleLeftBar();
 
@@ -270,17 +278,15 @@ removeLeftBar = () => {
   });
 };
 
-
-
 // Listen for messages from background scripts
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.action === 'domainAddSuccess') {
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.action === "domainAddSuccess") {
     showLeftBar("danger");
-    showAddingToast("Domain stored in the database", "success", 5000);   
-  } else if (message.action === 'domainAddError') {
+    showAddingToast("Domain stored in the database", "success", 5000);
+  } else if (message.action === "domainAddError") {
     showAddingToast("Error adding domain", "danger", 5000);
-  } else if (message.action === 'toggleLeftBar') {
+  } else if (message.action === "toggleLeftBar") {
     toggleLeftBar();
-    console.log("toggleleftbar")
+    console.log("toggleleftbar");
   }
 });
